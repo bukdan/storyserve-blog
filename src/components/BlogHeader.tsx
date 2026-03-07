@@ -60,6 +60,7 @@ const BlogHeader = () => {
         {/* Mobile menu */}
         {menuOpen && (
           <div className="md:hidden pb-4 space-y-2 animate-fade-in">
+            <div className="mb-3"><SearchBar /></div>
             <Link to="/" className="block py-2 text-muted-foreground" onClick={() => setMenuOpen(false)}>Beranda</Link>
             {categories.map(cat => (
               <Link key={cat.id} to={`/category/${cat.slug}`} className="block py-2 text-muted-foreground capitalize" onClick={() => setMenuOpen(false)}>
