@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { Link, useLocation, Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { FileText, FolderOpen, Tag, Megaphone, LayoutGrid, LogOut, Home } from 'lucide-react';
+import { FileText, FolderOpen, Tag, Megaphone, LayoutGrid, LogOut, Home, BarChart3 } from 'lucide-react';
 
 const navItems = [
   { to: '/admin', icon: LayoutGrid, label: 'Dashboard' },
@@ -9,6 +9,7 @@ const navItems = [
   { to: '/admin/categories', icon: FolderOpen, label: 'Kategori' },
   { to: '/admin/tags', icon: Tag, label: 'Tags' },
   { to: '/admin/ads', icon: Megaphone, label: 'Iklan' },
+  { to: '/admin/analytics', icon: BarChart3, label: 'Analytics' },
 ];
 
 const AdminLayout = ({ children }: { children: ReactNode }) => {
