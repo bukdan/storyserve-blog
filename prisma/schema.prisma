@@ -1,9 +1,6 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,20 +10,154 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// User profile and authentication
 model User {
   id        String   @id @default(cuid())
   email     String   @unique
-  name      String?
+  password  String
+  name      String
+  avatarUrl String?
+  role      Role     @default(AUTHOR)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  posts     Post[]
+  profile   Profile?
+  userRole  UserRole?
+}
+
+enum Role {
+  ADMIN
+  AUTHOR
+}
+
+model Profile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  name      String
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model UserRole {
+  id     String @id @default(cuid())
+  userId String @unique
+  role   Role
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+// Blog content
+model Category {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  posts Post[]
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  posts PostTag[]
 }
 
 model Post {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  content     String    @default("")
+  excerpt     String?
+  coverImage  String?
+  status      PostStatus @default(DRAFT)
+  views       Int       @default(0)
+  authorId    String
+  categoryId  String?
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  author    User        @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  category  Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  tags      PostTag[]
+  comments  Comment[]
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+model PostTag {
+  postId String
+  tagId  String
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  postId    String
+  name      String
+  email     String?
+  message   String
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+// Advertising system
+model AdSlot {
+  id        String   @id @default(cuid())
+  name      String
+  position  String
+  size      String
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  ads Ad[]
+}
+
+model Ad {
   id        String   @id @default(cuid())
   title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+  imageUrl  String
+  linkUrl   String
+  slotId    String
+  startDate DateTime
+  endDate   DateTime
+  active    Boolean  @default(true)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  slot        AdSlot          @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  clicks      AdClick[]
+  impressions AdImpression[]
+}
+
+model AdClick {
+  id        String   @id @default(cuid())
+  adId      String
+  userIp    String?
+  createdAt DateTime @default(now())
+
+  ad Ad @relation(fields: [adId], references: [id], onDelete: Cascade)
+}
+
+model AdImpression {
+  id        String   @id @default(cuid())
+  adId      String
+  userIp    String?
+  createdAt DateTime @default(now())
+
+  ad Ad @relation(fields: [adId], references: [id], onDelete: Cascade)
 }
