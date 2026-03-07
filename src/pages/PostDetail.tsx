@@ -81,6 +81,13 @@ const PostDetail = () => {
     setSubmitting(false);
   };
 
+  useSEO({
+    title: post?.title,
+    description: post?.excerpt || undefined,
+    image: post?.cover_image || undefined,
+    type: 'article',
+  });
+
   if (loading) return <BlogLayout><div className="container py-20 text-center text-muted-foreground">Memuat artikel...</div></BlogLayout>;
   if (!post) return <BlogLayout><div className="container py-20 text-center"><h1 className="font-heading text-3xl">Artikel tidak ditemukan</h1></div></BlogLayout>;
 
@@ -129,6 +136,9 @@ const PostDetail = () => {
                 ))}
               </div>
             )}
+
+            {/* Related Posts */}
+            <RelatedPosts postId={post.id} categoryId={post.category_id} authorId={post.author_id} />
 
             {/* Inline Ad */}
             <AdBanner position="article_inline" className="my-10" />
