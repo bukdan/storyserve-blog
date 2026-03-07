@@ -1,13 +1,117 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import BlogLayout from '@/components/BlogLayout';
+import PostCard from '@/components/PostCard';
+import AdBanner from '@/components/AdBanner';
+
+interface PostWithRelations {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  cover_image: string | null;
+  published_at: string | null;
+  profiles: { name: string } | null;
+  categories: { name: string } | null;
+}
 
 const Index = () => {
+  const [posts, setPosts] = useState<PostWithRelations[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const { data } = await supabase
+        .from('posts')
+        .select('id, title, slug, excerpt, cover_image, published_at, profiles!posts_author_id_fkey(name), categories(name)')
+        .eq('status', 'published')
+        .order('published_at', { ascending: false })
+        .limit(13);
+
+      if (data) setPosts(data as unknown as PostWithRelations[]);
+      setLoading(false);
+    };
+    fetchPosts();
+  }, []);
+
+  const featured = posts[0];
+  const sidebar = posts.slice(1, 5);
+  const rest = posts.slice(5);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <BlogLayout>
+      {/* Header Ad */}
+      <AdBanner position="header" className="py-4 bg-secondary" />
+
+      <div className="container mx-auto py-8">
+        {loading ? (
+          <div className="text-center py-20 text-muted-foreground">Memuat artikel...</div>
+        ) : posts.length === 0 ? (
+          <div className="text-center py-20">
+            <h2 className="font-heading text-3xl font-bold mb-3">Selamat Datang di TheMag</h2>
+            <p className="text-muted-foreground">Belum ada artikel. Login sebagai admin untuk mulai menulis.</p>
+          </div>
+        ) : (
+          <>
+            {/* Featured + Sidebar */}
+            <div className="magazine-grid mb-10">
+              {featured && (
+                <PostCard
+                  title={featured.title}
+                  slug={featured.slug}
+                  excerpt={featured.excerpt}
+                  cover_image={featured.cover_image}
+                  category_name={featured.categories?.name}
+                  author_name={featured.profiles?.name}
+                  published_at={featured.published_at}
+                  featured
+                />
+              )}
+              <div className="col-span-12 md:col-span-4 space-y-4">
+                {sidebar.map(post => (
+                  <PostCard
+                    key={post.id}
+                    title={post.title}
+                    slug={post.slug}
+                    cover_image={post.cover_image}
+                    category_name={post.categories?.name}
+                    author_name={post.profiles?.name}
+                    published_at={post.published_at}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Inline Ad */}
+            <AdBanner position="article_inline" className="my-8" />
+
+            {/* More posts grid */}
+            {rest.length > 0 && (
+              <>
+                <h2 className="font-heading text-2xl font-bold mb-6 border-b border-border pb-3">Artikel Terbaru</h2>
+                <div className="magazine-grid">
+                  {rest.map(post => (
+                    <PostCard
+                      key={post.id}
+                      title={post.title}
+                      slug={post.slug}
+                      excerpt={post.excerpt}
+                      cover_image={post.cover_image}
+                      category_name={post.categories?.name}
+                      author_name={post.profiles?.name}
+                      published_at={post.published_at}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+          </>
+        )}
       </div>
-    </div>
+
+      {/* Footer Ad */}
+      <AdBanner position="footer" className="py-4 bg-secondary" />
+    </BlogLayout>
   );
 };
 
