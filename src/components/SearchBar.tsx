@@ -1,16 +1,26 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Search, X } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
 const SearchBar = () => {
+  const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<any[]>([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.trim()) {
+      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+      setOpen(false);
+      setQuery('');
+    }
+  };
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -42,7 +52,7 @@ const SearchBar = () => {
 
   return (
     <div ref={ref} className="relative">
-      <div className="relative">
+      <form onSubmit={handleSearchSubmit} className="relative">
         <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Cari artikel..."
@@ -56,7 +66,7 @@ const SearchBar = () => {
             <X size={14} />
           </button>
         )}
-      </div>
+      </form>
       {open && query.length >= 2 && (
         <div className="absolute top-full left-0 right-0 mt-1 bg-card border border-border rounded-lg shadow-lg z-50 max-h-80 overflow-auto">
           {loading ? (
