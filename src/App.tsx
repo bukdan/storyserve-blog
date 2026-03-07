@@ -9,6 +9,7 @@ import PostDetail from "./pages/PostDetail";
 import CategoryPage from "./pages/CategoryPage";
 import LoginPage from "./pages/LoginPage";
 import AuthorPage from "./pages/AuthorPage";
+import SearchPage from "./pages/SearchPage";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminPosts from "./pages/admin/AdminPosts";
 import PostEditor from "./pages/admin/PostEditor";
@@ -33,6 +34,7 @@ const App = () => (
             <Route path="/category/:slug" element={<CategoryPage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/author/:userId" element={<AuthorPage />} />
+            <Route path="/search" element={<SearchPage />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/posts" element={<AdminPosts />} />
             <Route path="/admin/posts/:id" element={<PostEditor />} />
