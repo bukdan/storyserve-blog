@@ -25,13 +25,15 @@ const PostDetail = () => {
       if (!slug) return;
       const { data } = await supabase
         .from('posts')
-        .select('*, profiles!posts_author_id_fkey(name, avatar_url), categories(name, slug)')
+        .select('*, categories(name, slug)')
         .eq('slug', slug)
         .eq('status', 'published')
         .single();
 
       if (data) {
-        setPost(data);
+        // Fetch author profile
+        const { data: profile } = await supabase.from('profiles').select('name, avatar_url').eq('user_id', data.author_id).single();
+        setPost({ ...data, profiles: profile });
         // Increment views
         supabase.from('posts').update({ views: (data.views || 0) + 1 }).eq('id', data.id).then(() => {});
 
