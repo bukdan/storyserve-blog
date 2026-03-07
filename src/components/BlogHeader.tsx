@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import SearchBar from '@/components/SearchBar';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sun, Moon } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 import { supabase } from '@/integrations/supabase/client';
 
 const BlogHeader = () => {
   const { user, signOut, role } = useAuth();
+  const { theme, setTheme } = useTheme();
   const [categories, setCategories] = useState<{ id: string; name: string; slug: string }[]>([]);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -28,7 +30,10 @@ const BlogHeader = () => {
           <div className="hidden md:block flex-1 max-w-sm">
             <SearchBar />
           </div>
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
+            <Button variant="ghost" size="icon" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="h-9 w-9">
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </Button>
             {user ? (
               <>
                 {(role === 'admin' || role === 'author') && (
