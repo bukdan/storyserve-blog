@@ -82,7 +82,7 @@ const Index = () => {
                   excerpt={featured.excerpt}
                   cover_image={featured.cover_image}
                   category_name={featured.categories?.name}
-                  author_name={featured.profiles?.name}
+                  author_name={featured.author_name}
                   published_at={featured.published_at}
                   featured
                 />
@@ -95,7 +95,7 @@ const Index = () => {
                     slug={post.slug}
                     cover_image={post.cover_image}
                     category_name={post.categories?.name}
-                    author_name={post.profiles?.name}
+                    author_name={post.author_name}
                     published_at={post.published_at}
                   />
                 ))}
@@ -118,7 +118,7 @@ const Index = () => {
                       excerpt={post.excerpt}
                       cover_image={post.cover_image}
                       category_name={post.categories?.name}
-                      author_name={post.profiles?.name}
+                      author_name={post.author_name}
                       published_at={post.published_at}
                     />
                   ))}
