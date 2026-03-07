@@ -72,6 +72,10 @@ const BlogHeader = () => {
                 {cat.name}
               </Link>
             ))}
+            <button className="flex items-center gap-2 py-2 text-muted-foreground" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              {theme === 'dark' ? 'Mode Terang' : 'Mode Gelap'}
+            </button>
             {user ? (
               <>
                 {(role === 'admin' || role === 'author') && (
