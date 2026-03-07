@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import BlogLayout from '@/components/BlogLayout';
 import AdBanner from '@/components/AdBanner';
@@ -25,13 +25,15 @@ const PostDetail = () => {
       if (!slug) return;
       const { data } = await supabase
         .from('posts')
-        .select('*, profiles!posts_author_id_fkey(name, avatar_url), categories(name, slug)')
+        .select('*, categories(name, slug)')
         .eq('slug', slug)
         .eq('status', 'published')
         .single();
 
       if (data) {
-        setPost(data);
+        // Fetch author profile
+        const { data: profile } = await supabase.from('profiles').select('name, avatar_url').eq('user_id', data.author_id).single();
+        setPost({ ...data, profiles: profile });
         // Increment views
         supabase.from('posts').update({ views: (data.views || 0) + 1 }).eq('id', data.id).then(() => {});
 
@@ -95,7 +97,7 @@ const PostDetail = () => {
           <h1 className="font-heading text-3xl md:text-5xl font-bold leading-tight mb-4">{post.title}</h1>
           {post.excerpt && <p className="text-lg text-muted-foreground font-body mb-4">{post.excerpt}</p>}
           <div className="flex items-center gap-3 text-sm text-muted-foreground border-b border-border pb-6">
-            <span className="font-medium text-foreground">{post.profiles?.name}</span>
+            <Link to={`/author/${post.author_id}`} className="font-medium text-foreground hover:text-accent transition-colors">{post.profiles?.name}</Link>
             <span>·</span>
             {post.published_at && <span>{format(new Date(post.published_at), 'dd MMMM yyyy', { locale: localeId })}</span>}
             <span>·</span>

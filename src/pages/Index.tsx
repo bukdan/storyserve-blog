@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import BlogLayout from '@/components/BlogLayout';
 import PostCard from '@/components/PostCard';
 import AdBanner from '@/components/AdBanner';
+import { Button } from '@/components/ui/button';
 
 interface PostWithRelations {
   id: string;
@@ -11,28 +12,64 @@ interface PostWithRelations {
   excerpt: string | null;
   cover_image: string | null;
   published_at: string | null;
-  profiles: { name: string } | null;
+  author_name: string;
+  author_id: string;
   categories: { name: string } | null;
 }
+
+const PAGE_SIZE = 12;
 
 const Index = () => {
   const [posts, setPosts] = useState<PostWithRelations[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(0);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      const { data } = await supabase
-        .from('posts')
-        .select('id, title, slug, excerpt, cover_image, published_at, profiles!posts_author_id_fkey(name), categories(name)')
-        .eq('status', 'published')
-        .order('published_at', { ascending: false })
-        .limit(13);
+  const fetchPosts = async (pageNum: number, append = false) => {
+    if (pageNum === 0) setLoading(true);
+    else setLoadingMore(true);
 
-      if (data) setPosts(data as unknown as PostWithRelations[]);
-      setLoading(false);
-    };
-    fetchPosts();
-  }, []);
+    const from = pageNum * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+
+    const { data } = await supabase
+      .from('posts')
+      .select('id, title, slug, excerpt, cover_image, published_at, author_id, categories(name)')
+      .eq('status', 'published')
+      .order('published_at', { ascending: false })
+      .range(from, to);
+
+    if (data && data.length > 0) {
+      const authorIds = [...new Set(data.map(p => p.author_id))];
+      const { data: profiles } = await supabase.from('profiles').select('user_id, name').in('user_id', authorIds);
+      const profileMap = new Map(profiles?.map(p => [p.user_id, p.name]) || []);
+
+      const mapped = data.map(p => ({
+        id: p.id, title: p.title, slug: p.slug, excerpt: p.excerpt,
+        cover_image: p.cover_image, published_at: p.published_at,
+        author_name: profileMap.get(p.author_id) || 'Unknown',
+        author_id: p.author_id,
+        categories: p.categories,
+      }));
+
+      setPosts(prev => append ? [...prev, ...mapped] : mapped);
+      setHasMore(data.length === PAGE_SIZE);
+    } else {
+      if (!append) setPosts([]);
+      setHasMore(false);
+    }
+    setLoading(false);
+    setLoadingMore(false);
+  };
+
+  useEffect(() => { fetchPosts(0); }, []);
+
+  const loadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchPosts(nextPage, true);
+  };
 
   const featured = posts[0];
   const sidebar = posts.slice(1, 5);
@@ -40,7 +77,6 @@ const Index = () => {
 
   return (
     <BlogLayout>
-      {/* Header Ad */}
       <AdBanner position="header" className="py-4 bg-secondary" />
 
       <div className="container mx-auto py-8">
@@ -62,7 +98,8 @@ const Index = () => {
                   excerpt={featured.excerpt}
                   cover_image={featured.cover_image}
                   category_name={featured.categories?.name}
-                  author_name={featured.profiles?.name}
+                  author_name={featured.author_name}
+                  author_id={featured.author_id}
                   published_at={featured.published_at}
                   featured
                 />
@@ -75,17 +112,16 @@ const Index = () => {
                     slug={post.slug}
                     cover_image={post.cover_image}
                     category_name={post.categories?.name}
-                    author_name={post.profiles?.name}
+                    author_name={post.author_name}
+                    author_id={post.author_id}
                     published_at={post.published_at}
                   />
                 ))}
               </div>
             </div>
 
-            {/* Inline Ad */}
             <AdBanner position="article_inline" className="my-8" />
 
-            {/* More posts grid */}
             {rest.length > 0 && (
               <>
                 <h2 className="font-heading text-2xl font-bold mb-6 border-b border-border pb-3">Artikel Terbaru</h2>
@@ -98,18 +134,26 @@ const Index = () => {
                       excerpt={post.excerpt}
                       cover_image={post.cover_image}
                       category_name={post.categories?.name}
-                      author_name={post.profiles?.name}
+                      author_name={post.author_name}
+                      author_id={post.author_id}
                       published_at={post.published_at}
                     />
                   ))}
                 </div>
               </>
             )}
+
+            {hasMore && (
+              <div className="text-center mt-10">
+                <Button variant="outline" onClick={loadMore} disabled={loadingMore} className="px-8">
+                  {loadingMore ? 'Memuat...' : 'Muat Lebih Banyak'}
+                </Button>
+              </div>
+            )}
           </>
         )}
       </div>
 
-      {/* Footer Ad */}
       <AdBanner position="footer" className="py-4 bg-secondary" />
     </BlogLayout>
   );

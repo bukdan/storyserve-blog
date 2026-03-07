@@ -10,12 +10,21 @@ interface PostCardProps {
   cover_image?: string | null;
   category_name?: string | null;
   author_name?: string;
+  author_id?: string;
   published_at?: string | null;
   featured?: boolean;
 }
 
-const PostCard = ({ title, slug, excerpt, cover_image, category_name, author_name, published_at, featured }: PostCardProps) => {
+const PostCard = ({ title, slug, excerpt, cover_image, category_name, author_name, author_id, published_at, featured }: PostCardProps) => {
   const dateStr = published_at ? format(new Date(published_at), 'dd MMM yyyy', { locale: id }) : '';
+
+  const AuthorLink = () => (
+    author_id ? (
+      <Link to={`/author/${author_id}`} className="hover:underline" onClick={e => e.stopPropagation()}>
+        {author_name}
+      </Link>
+    ) : <span>{author_name}</span>
+  );
 
   if (featured) {
     return (
@@ -38,7 +47,7 @@ const PostCard = ({ title, slug, excerpt, cover_image, category_name, author_nam
           <h2 className="font-heading text-2xl md:text-3xl font-bold text-card leading-tight mb-2">{title}</h2>
           {excerpt && <p className="text-card/80 text-sm line-clamp-2 font-body">{excerpt}</p>}
           <div className="flex items-center gap-2 mt-3 text-xs text-card/60">
-            {author_name && <span>{author_name}</span>}
+            {author_name && <AuthorLink />}
             {dateStr && <><span>·</span><span>{dateStr}</span></>}
           </div>
         </div>
@@ -67,7 +76,7 @@ const PostCard = ({ title, slug, excerpt, cover_image, category_name, author_nam
       </h3>
       {excerpt && <p className="text-sm text-muted-foreground line-clamp-2 font-body">{excerpt}</p>}
       <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-        {author_name && <span>{author_name}</span>}
+        {author_name && <AuthorLink />}
         {dateStr && <><span>·</span><span>{dateStr}</span></>}
       </div>
     </Link>
