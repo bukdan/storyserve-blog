@@ -14,6 +14,7 @@ import PostEditor from "./pages/admin/PostEditor";
 import AdminCategories from "./pages/admin/AdminCategories";
 import AdminTags from "./pages/admin/AdminTags";
 import AdminAds from "./pages/admin/AdminAds";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/admin/categories" element={<AdminCategories />} />
             <Route path="/admin/tags" element={<AdminTags />} />
             <Route path="/admin/ads" element={<AdminAds />} />
+            <Route path="/admin/analytics" element={<AdminAnalytics />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

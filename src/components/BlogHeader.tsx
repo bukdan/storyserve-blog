@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
+import SearchBar from '@/components/SearchBar';
 import { Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
@@ -20,10 +21,13 @@ const BlogHeader = () => {
     <header className="border-b border-border bg-card sticky top-0 z-50">
       <div className="container mx-auto">
         {/* Top bar */}
-        <div className="flex items-center justify-between py-4">
-          <Link to="/" className="font-heading text-2xl md:text-3xl font-bold text-foreground tracking-tight">
+        <div className="flex items-center justify-between py-4 gap-4">
+          <Link to="/" className="font-heading text-2xl md:text-3xl font-bold text-foreground tracking-tight flex-shrink-0">
             TheMag<span className="text-accent">.</span>
           </Link>
+          <div className="hidden md:block flex-1 max-w-sm">
+            <SearchBar />
+          </div>
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <>
