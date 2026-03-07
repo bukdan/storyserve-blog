@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import BlogLayout from '@/components/BlogLayout';
 import PostCard from '@/components/PostCard';
 import AdBanner from '@/components/AdBanner';
+import SpaceBanner from '@/components/SpaceBanner';
 import { Button } from '@/components/ui/button';
 
 interface PostWithRelations {
@@ -77,6 +78,7 @@ const Index = () => {
 
   return (
     <BlogLayout>
+      <SpaceBanner className="mx-auto max-w-5xl my-2" label="HEADER AD SPACE" />
       <AdBanner position="header" className="py-4 bg-secondary" />
 
       <div className="container mx-auto py-8">
@@ -120,6 +122,7 @@ const Index = () => {
               </div>
             </div>
 
+            <SpaceBanner className="my-4" label="INLINE AD SPACE" />
             <AdBanner position="article_inline" className="my-8" />
 
             {rest.length > 0 && (
@@ -154,6 +157,7 @@ const Index = () => {
         )}
       </div>
 
+      <SpaceBanner className="mx-auto max-w-5xl my-2" label="FOOTER AD SPACE" />
       <AdBanner position="footer" className="py-4 bg-secondary" />
     </BlogLayout>
   );
