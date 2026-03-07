@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import BlogLayout from '@/components/BlogLayout';
 import PostCard from '@/components/PostCard';
 import AdBanner from '@/components/AdBanner';
+import SpaceBanner from '@/components/SpaceBanner';
 import { Button } from '@/components/ui/button';
 
 interface PostWithRelations {

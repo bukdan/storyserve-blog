@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import BlogLayout from '@/components/BlogLayout';
 import AdBanner from '@/components/AdBanner';
+import SpaceBanner from '@/components/SpaceBanner';
 import RelatedPosts from '@/components/RelatedPosts';
 import PostSidebar from '@/components/PostSidebar';
 import useSEO from '@/hooks/useSEO';
