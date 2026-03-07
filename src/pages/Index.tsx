@@ -11,7 +11,7 @@ interface PostWithRelations {
   excerpt: string | null;
   cover_image: string | null;
   published_at: string | null;
-  profiles: { name: string } | null;
+  author_name: string;
   categories: { name: string } | null;
 }
 
@@ -23,12 +23,32 @@ const Index = () => {
     const fetchPosts = async () => {
       const { data } = await supabase
         .from('posts')
-        .select('id, title, slug, excerpt, cover_image, published_at, profiles!posts_author_id_fkey(name), categories(name)')
+        .select('id, title, slug, excerpt, cover_image, published_at, author_id, categories(name)')
         .eq('status', 'published')
         .order('published_at', { ascending: false })
         .limit(13);
 
-      if (data) setPosts(data as unknown as PostWithRelations[]);
+      if (data && data.length > 0) {
+        // Fetch author profiles
+        const authorIds = [...new Set(data.map(p => p.author_id))];
+        const { data: profiles } = await supabase
+          .from('profiles')
+          .select('user_id, name')
+          .in('user_id', authorIds);
+
+        const profileMap = new Map(profiles?.map(p => [p.user_id, p.name]) || []);
+        
+        setPosts(data.map(p => ({
+          id: p.id,
+          title: p.title,
+          slug: p.slug,
+          excerpt: p.excerpt,
+          cover_image: p.cover_image,
+          published_at: p.published_at,
+          author_name: profileMap.get(p.author_id) || 'Unknown',
+          categories: p.categories,
+        })));
+      }
       setLoading(false);
     };
     fetchPosts();
