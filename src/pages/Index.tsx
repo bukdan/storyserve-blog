@@ -78,6 +78,7 @@ const Index = () => {
 
   return (
     <BlogLayout>
+      <SpaceBanner className="mx-auto max-w-5xl my-2" label="HEADER AD SPACE" />
       <AdBanner position="header" className="py-4 bg-secondary" />
 
       <div className="container mx-auto py-8">
@@ -121,6 +122,7 @@ const Index = () => {
               </div>
             </div>
 
+            <SpaceBanner className="my-4" label="INLINE AD SPACE" />
             <AdBanner position="article_inline" className="my-8" />
 
             {rest.length > 0 && (
@@ -155,6 +157,7 @@ const Index = () => {
         )}
       </div>
 
+      <SpaceBanner className="mx-auto max-w-5xl my-2" label="FOOTER AD SPACE" />
       <AdBanner position="footer" className="py-4 bg-secondary" />
     </BlogLayout>
   );

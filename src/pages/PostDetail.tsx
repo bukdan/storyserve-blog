@@ -95,6 +95,7 @@ const PostDetail = () => {
 
   return (
     <BlogLayout>
+      <SpaceBanner className="mx-auto max-w-4xl my-2" label="HEADER AD SPACE" />
       <AdBanner position="header" className="py-4 bg-secondary" />
       
       <article className="container mx-auto py-8 max-w-4xl">
@@ -143,6 +144,7 @@ const PostDetail = () => {
             <RelatedPosts postId={post.id} categoryId={post.category_id} authorId={post.author_id} />
 
             {/* Inline Ad */}
+            <SpaceBanner className="my-6" label="INLINE AD SPACE" />
             <AdBanner position="article_inline" className="my-10" />
 
             {/* Comments */}
@@ -207,6 +209,7 @@ const PostDetail = () => {
         </div>
       </article>
 
+      <SpaceBanner className="mx-auto max-w-4xl my-2" label="FOOTER AD SPACE" />
       <AdBanner position="footer" className="py-4 bg-secondary" />
     </BlogLayout>
   );
