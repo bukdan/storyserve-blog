@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import BlogLayout from '@/components/BlogLayout';
 import PostCard from '@/components/PostCard';
+import useSEO from '@/hooks/useSEO';
 import { Button } from '@/components/ui/button';
 
 const PAGE_SIZE = 12;
@@ -88,6 +89,11 @@ const CategoryPage = () => {
     setPage(nextPage);
     fetchPosts(catId, nextPage, true);
   };
+
+  useSEO({
+    title: categoryName ? `Kategori: ${categoryName}` : undefined,
+    description: categoryName ? `Baca artikel terbaru dalam kategori ${categoryName} di TheMag.` : undefined,
+  });
 
   return (
     <BlogLayout>
