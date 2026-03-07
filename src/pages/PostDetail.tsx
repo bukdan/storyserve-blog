@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import BlogLayout from '@/components/BlogLayout';
 import AdBanner from '@/components/AdBanner';
 import RelatedPosts from '@/components/RelatedPosts';
+import PostSidebar from '@/components/PostSidebar';
 import useSEO from '@/hooks/useSEO';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -194,8 +195,13 @@ const PostDetail = () => {
           </div>
 
           {/* Sidebar */}
-          <aside className="md:col-span-4 space-y-6">
-            <AdBanner position="sidebar" />
+          <aside className="md:col-span-4">
+            <div className="sticky top-20">
+              <PostSidebar
+                postUrl={typeof window !== 'undefined' ? window.location.href : ''}
+                postTitle={post.title}
+              />
+            </div>
           </aside>
         </div>
       </article>
