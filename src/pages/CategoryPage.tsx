@@ -5,6 +5,8 @@ import BlogLayout from '@/components/BlogLayout';
 import PostCard from '@/components/PostCard';
 import useSEO from '@/hooks/useSEO';
 import { Button } from '@/components/ui/button';
+import SpaceBanner from '@/components/SpaceBanner';
+import AdBanner from '@/components/AdBanner';
 
 const PAGE_SIZE = 12;
 
