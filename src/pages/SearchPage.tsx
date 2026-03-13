@@ -13,6 +13,8 @@ import { cn } from '@/lib/utils';
 import { Search, CalendarIcon, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
+import SpaceBanner from '@/components/SpaceBanner';
+import AdBanner from '@/components/AdBanner';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
