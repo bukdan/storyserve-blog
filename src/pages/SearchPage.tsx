@@ -220,18 +220,25 @@ const SearchPage = () => {
             <>
               <p className="text-sm text-muted-foreground mb-4">{posts.length} artikel ditemukan</p>
               <div className="magazine-grid">
-                {posts.map(post => (
-                  <PostCard
-                    key={post.id}
-                    title={post.title}
-                    slug={post.slug}
-                    excerpt={post.excerpt}
-                    cover_image={post.cover_image}
-                    category_name={post.categories?.name}
-                    author_name={post.author_name}
-                    author_id={post.author_id}
-                    published_at={post.published_at}
-                  />
+                {posts.map((post, index) => (
+                  <React.Fragment key={post.id}>
+                    {index === 6 && (
+                      <div className="col-span-12">
+                        <SpaceBanner className="my-2" label="INLINE AD SPACE" />
+                        <AdBanner position="article_inline" className="my-4" />
+                      </div>
+                    )}
+                    <PostCard
+                      title={post.title}
+                      slug={post.slug}
+                      excerpt={post.excerpt}
+                      cover_image={post.cover_image}
+                      category_name={post.categories?.name}
+                      author_name={post.author_name}
+                      author_id={post.author_id}
+                      published_at={post.published_at}
+                    />
+                  </React.Fragment>
                 ))}
               </div>
             </>
