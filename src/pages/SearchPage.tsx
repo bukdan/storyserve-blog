@@ -249,6 +249,8 @@ const SearchPage = () => {
           </div>
         )}
       </div>
+      <SpaceBanner className="mx-auto max-w-5xl my-2" label="FOOTER AD SPACE" />
+      <AdBanner position="footer" className="py-4 bg-secondary" />
     </BlogLayout>
   );
 };
