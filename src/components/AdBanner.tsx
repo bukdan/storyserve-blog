@@ -29,7 +29,7 @@ const AdBanner = ({ position, className = '' }: AdBannerProps) => {
         .lte('start_date', now)
         .gte('end_date', now)
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (data) {
         setAd({ id: data.id, title: data.title, image_url: data.image_url, link_url: data.link_url });

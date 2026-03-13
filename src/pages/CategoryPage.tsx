@@ -5,6 +5,8 @@ import BlogLayout from '@/components/BlogLayout';
 import PostCard from '@/components/PostCard';
 import useSEO from '@/hooks/useSEO';
 import { Button } from '@/components/ui/button';
+import SpaceBanner from '@/components/SpaceBanner';
+import AdBanner from '@/components/AdBanner';
 
 const PAGE_SIZE = 12;
 
@@ -97,6 +99,8 @@ const CategoryPage = () => {
 
   return (
     <BlogLayout>
+      <SpaceBanner className="mx-auto max-w-5xl my-2" label="HEADER AD SPACE" />
+      <AdBanner position="header" className="py-4 bg-secondary" />
       <div className="container mx-auto py-8">
         <h1 className="font-heading text-3xl font-bold mb-2 capitalize">{categoryName}</h1>
         <p className="text-muted-foreground mb-8 border-b border-border pb-6">
@@ -131,6 +135,8 @@ const CategoryPage = () => {
           </>
         )}
       </div>
+      <SpaceBanner className="mx-auto max-w-5xl my-2" label="FOOTER AD SPACE" />
+      <AdBanner position="footer" className="py-4 bg-secondary" />
     </BlogLayout>
   );
 };

@@ -13,6 +13,8 @@ import { cn } from '@/lib/utils';
 import { Search, CalendarIcon, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { id as localeId } from 'date-fns/locale';
+import SpaceBanner from '@/components/SpaceBanner';
+import AdBanner from '@/components/AdBanner';
 
 const SearchPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -113,6 +115,8 @@ const SearchPage = () => {
 
   return (
     <BlogLayout>
+      <SpaceBanner className="mx-auto max-w-5xl my-2" label="HEADER AD SPACE" />
+      <AdBanner position="header" className="py-4 bg-secondary" />
       <div className="container mx-auto py-8">
         <h1 className="font-heading text-3xl font-bold mb-6">Pencarian Artikel</h1>
 
@@ -245,6 +249,8 @@ const SearchPage = () => {
           </div>
         )}
       </div>
+      <SpaceBanner className="mx-auto max-w-5xl my-2" label="FOOTER AD SPACE" />
+      <AdBanner position="footer" className="py-4 bg-secondary" />
     </BlogLayout>
   );
 };
